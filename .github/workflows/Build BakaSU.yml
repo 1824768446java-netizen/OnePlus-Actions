@@ -305,10 +305,14 @@ jobs:
 
           # 下载并执行设置脚本
           echo "🛠️ 正在设置BakaSU..."
-          curl -LSs "https://raw.githubusercontent.com/Baka-SU/BakaSU/main/kernel/setup.sh" | bash -s main
+          # 一加 Pad 2 Pro: 钉住 v4.2.0-rc3 tag, 使 KSUVER=35171
+          # 与官方 ReSukiSU_v4.2.0-rc3_35171 管理器完全匹配
+          curl -LSs "https://raw.githubusercontent.com/Baka-SU/BakaSU/main/kernel/setup.sh" | bash -s v4.2.0-rc3
 
           cd KernelSU
-          KSU_VERSION=$(expr $(/usr/bin/git rev-list --count main) "+" 30700)
+          CNT=$(/usr/bin/git rev-list --count HEAD)
+          KSU_VERSION=$((CNT + 30700))
+          echo "🔎 ReSukiSU ref=v4.2.0-rc3  commits=$CNT  KSUVER=$KSU_VERSION"
           echo "KSUVER=$KSU_VERSION" >> $GITHUB_ENV
           
           if [ "${{ github.event.inputs.BAZEL }}" == "On" ]; then
@@ -731,13 +735,13 @@ jobs:
         id: set_name
         run: |
           if [ "${{ github.event.inputs.lz4kd }}" = "On" ]; then
-            BASE_NAME="${{ github.event.inputs.FEIL }}_BakaSU_lz4kd_${{ env.KSUVER }}"
+            BASE_NAME="${{ github.event.inputs.FEIL }}_ReSukiSU_lz4kd_${{ env.KSUVER }}"
           elif [ "${{ github.event.inputs.KERNEL_VERSION }}" = "6.1" ]; then
-            BASE_NAME="${{ github.event.inputs.FEIL }}_BakaSU_lz4_zstd_${{ env.KSUVER }}"
+            BASE_NAME="${{ github.event.inputs.FEIL }}_ReSukiSU_lz4_zstd_${{ env.KSUVER }}"
           elif [ "${{ github.event.inputs.KERNEL_VERSION }}" = "6.6" ]; then
-            BASE_NAME="${{ github.event.inputs.FEIL }}_BakaSU_lz4_${{ env.KSUVER }}"
+            BASE_NAME="${{ github.event.inputs.FEIL }}_ReSukiSU_lz4_${{ env.KSUVER }}"
           else
-            BASE_NAME="${{ github.event.inputs.FEIL }}_BakaSU_${{ env.KSUVER }}"
+            BASE_NAME="${{ github.event.inputs.FEIL }}_ReSukiSU_${{ env.KSUVER }}"
           fi
           
           if [ "${{ github.event.inputs.SUSFS }}" = "On" ]; then
