@@ -60,3 +60,4 @@ Tips: SukiSU 由于长期不更新 编译时容易报错且稳定性较差 已�
 ### ④ 作者碎碎念
 
 - **关于元模块**: 推荐[Magic Mount - rs](https://github.com/Tools-cx-app/meta-magic_mount-rs/releases)
+- **一些小解释**: 作者因为开学高三了，并没有很多时间去维护更新，还请大家见谅
