@@ -280,7 +280,9 @@ jobs:
             sed -i '$s|echo "\$res"|echo "-${{ github.event.inputs.ANDROID_VERSION }}-oki-xiaoxiaow"|' kernel_platform/msm-kernel/scripts/setlocalversion
             sed -i '$s|echo "\$res"|echo "-${{ github.event.inputs.ANDROID_VERSION }}-oki-xiaoxiaow"|' kernel_platform/external/dtc/scripts/setlocalversion
           else
-            ESCAPED_SUFFIX=$(printf '%s\n' "-${{ github.event.inputs.ANDROID_VERSION }}-oki-xiaoxiaow" | sed 's:[\/&]:\\&:g')
+            # 一加 Pad 2 Pro (OPD2413) / ColorOS 16.0.10.600 C.35 库存 UTS 版本串
+            # 与 boot.img 中 "Linux version 6.6.118-android15-8-gc4127a25dcf3-ab15863337-4k" 完全一致
+            ESCAPED_SUFFIX=$(printf '%s\n' "-android15-8-gc4127a25dcf3-ab15863337-4k" | sed 's:[\/&]:\\&:g')
             sudo sed -i "s/-4k/$ESCAPED_SUFFIX/g" kernel_platform/common/arch/arm64/configs/gki_defconfig
             sed -i 's/${scm_version}//' kernel_platform/common/scripts/setlocalversion
             sed -i 's/${scm_version}//' kernel_platform/msm-kernel/scripts/setlocalversion
@@ -650,6 +652,12 @@ jobs:
             make -j$(nproc --all) LLVM=1 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CC="ccache clang" RUSTC=../../prebuilts/rust/linux-x86/1.73.0b/bin/rustc PAHOLE=../../prebuilts/kernel-build-tools/linux-x86/bin/pahole LD=ld.lld HOSTLD=ld.lld O=out KCFLAGS+=-O2 gki_defconfig all
 
           elif [ "${{ github.event.inputs.KERNEL_VERSION }}" == "6.6" ]; then
+            # 一加 Pad 2 Pro (OPD2413): 钉死库存构建者与构建时间
+            # 使 uname -a / /proc/version 显示 "#1 SMP PREEMPT Wed Jul 15 13:58:53 UTC 2026"
+            export KBUILD_BUILD_USER="kleaf"
+            export KBUILD_BUILD_HOST="build-host"
+            export KBUILD_BUILD_TIMESTAMP="Wed Jul 15 13:58:53 UTC 2026"
+            export KBUILD_BUILD_VERSION=1
             export PATH="/usr/lib/ccache:$GITHUB_WORKSPACE/kernel_workspace/kernel_platform/prebuilts/clang/host/linux-x86/clang-r510928/bin:$PATH" 
             export PATH="/usr/lib/ccache:$PATH"
             sudo apt install libelf-dev
