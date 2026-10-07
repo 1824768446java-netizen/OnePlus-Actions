@@ -1,4 +1,4 @@
-name: Build ReSukiSU
+name: Build BakaSU
 on:
   workflow_dispatch:
     inputs:
@@ -185,9 +185,9 @@ jobs:
       - name: "⚙️ Setup Cache Env | 设置缓存环境"
         run: |
           echo "🔧 正在设置机型隔离缓存目录..."
-          echo "CCACHE_DIR=$HOME/.ccache_${{ github.event.inputs.FEIL }}_ReSukiSU" >> $GITHUB_ENV
-          mkdir -p "$HOME/.ccache_${{ github.event.inputs.FEIL }}_ReSukiSU"
-          echo "✅ 缓存目录已设置: $HOME/.ccache_${{ github.event.inputs.FEIL }}_ReSukiSU"
+          echo "CCACHE_DIR=$HOME/.ccache_${{ github.event.inputs.FEIL }}_BakaSU" >> $GITHUB_ENV
+          mkdir -p "$HOME/.ccache_${{ github.event.inputs.FEIL }}_BakaSU"
+          echo "✅ 缓存目录已设置: $HOME/.ccache_${{ github.event.inputs.FEIL }}_BakaSU"
 
       - name: "🔐 Configure Git | 配置Git账户"
         run: |
@@ -207,20 +207,20 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ccache-${{ runner.os }}-${{ github.ref }}-${{ github.event.inputs.FEIL }}-ReSukiSU-SUSFS
+          key: ccache-${{ runner.os }}-${{ github.ref }}-${{ github.event.inputs.FEIL }}-BakaSU-SUSFS
           restore-keys: |
-            ccache-${{ runner.os }}-${{ github.event.inputs.FEIL }}-ReSukiSU-SUSFS
-            ccache-${{ runner.os }}-ReSukiSU-SUSFS
+            ccache-${{ runner.os }}-${{ github.event.inputs.FEIL }}-BakaSU-SUSFS
+            ccache-${{ runner.os }}-BakaSU-SUSFS
 
       - name: "💾 Restore ccache (Without SUSFS) | 恢复ccache缓存 (Without SUSFS)"
         if: ${{ github.event.inputs.SUSFS == 'Off' }}
         uses: actions/cache@v5
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ccache-${{ runner.os }}-${{ github.ref }}-${{ github.event.inputs.FEIL }}-ReSukiSU-NoSUSFS
+          key: ccache-${{ runner.os }}-${{ github.ref }}-${{ github.event.inputs.FEIL }}-BakaSU-NoSUSFS
           restore-keys: |
-            ccache-${{ runner.os }}-${{ github.event.inputs.FEIL }}-ReSukiSU-NoSUSFS
-            ccache-${{ runner.os }}-ReSukiSU-NoSUSFS
+            ccache-${{ runner.os }}-${{ github.event.inputs.FEIL }}-BakaSU-NoSUSFS
+            ccache-${{ runner.os }}-BakaSU-NoSUSFS
 
       - name: "⚙️ Initialize ccache | 初始化ccache"
         run: |
@@ -297,13 +297,13 @@ jobs:
           curl -sSL https://github.com/vc-teahouse/Baseband-guard/raw/main/setup.sh -o setup.sh
           bash setup.sh     
               
-      - name: "⚡ Setup ReSukiSU | 配置 ReSukiSU"
+      - name: "⚡ Setup BakaSU | 配置 BakaSU"
         run: |
           cd kernel_workspace/kernel_platform
 
           # 下载并执行设置脚本
-          echo "🛠️ 正在设置ReSukiSU..."
-          curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash -s main
+          echo "🛠️ 正在设置BakaSU..."
+          curl -LSs "https://raw.githubusercontent.com/Baka-SU/BakaSU/main/kernel/setup.sh" | bash -s main
 
           cd KernelSU
           KSU_VERSION=$(expr $(/usr/bin/git rev-list --count main) "+" 30700)
@@ -317,7 +317,7 @@ jobs:
             fi
           fi
 
-          echo "✅ ReSukiSU 配置完成"
+          echo "✅ BakaSU 配置完成"
           
       - name: "🔧 Setup Patches | 配置补丁"
         run: |
@@ -535,10 +535,10 @@ jobs:
           echo "⚙️ 正在配置内核编译选项..."
           
           echo "📦 启用 KSU 支持..."
-          curl -L -o resukisu_setup.bin https://github.com/Xiaomichael/OnePlus-Actions/raw/Build/script/resukisu_setup.bin
-          chmod +x resukisu_setup.bin
-          ./resukisu_setup.bin
-          rm -rf ./resukisu_setup.bin
+          curl -L -o BakaSU_setup.bin https://github.com/Xiaomichael/OnePlus-Actions/raw/Build/script/bakasu_setup.bin
+          chmod +x BakaSU_setup.bin
+          ./BakaSU_setup.bin
+          rm -rf ./BakaSU_setup.bin
           
           if [ "${{ github.event.inputs.SUSFS }}" == "On" ]; then
             echo "📦 启用 SUSFS 功能..."
@@ -723,13 +723,13 @@ jobs:
         id: set_name
         run: |
           if [ "${{ github.event.inputs.lz4kd }}" = "On" ]; then
-            BASE_NAME="${{ github.event.inputs.FEIL }}_ReSukiSU_lz4kd_${{ env.KSUVER }}"
+            BASE_NAME="${{ github.event.inputs.FEIL }}_BakaSU_lz4kd_${{ env.KSUVER }}"
           elif [ "${{ github.event.inputs.KERNEL_VERSION }}" = "6.1" ]; then
-            BASE_NAME="${{ github.event.inputs.FEIL }}_ReSukiSU_lz4_zstd_${{ env.KSUVER }}"
+            BASE_NAME="${{ github.event.inputs.FEIL }}_BakaSU_lz4_zstd_${{ env.KSUVER }}"
           elif [ "${{ github.event.inputs.KERNEL_VERSION }}" = "6.6" ]; then
-            BASE_NAME="${{ github.event.inputs.FEIL }}_ReSukiSU_lz4_${{ env.KSUVER }}"
+            BASE_NAME="${{ github.event.inputs.FEIL }}_BakaSU_lz4_${{ env.KSUVER }}"
           else
-            BASE_NAME="${{ github.event.inputs.FEIL }}_ReSukiSU_${{ env.KSUVER }}"
+            BASE_NAME="${{ github.event.inputs.FEIL }}_BakaSU_${{ env.KSUVER }}"
           fi
           
           if [ "${{ github.event.inputs.SUSFS }}" = "On" ]; then

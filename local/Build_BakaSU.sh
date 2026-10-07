@@ -6,7 +6,7 @@ REPO_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 
 clear
 echo "==============================================="
-echo "  ReSukiSU OnePlus Kernel Build Configuration  "
+echo "   BakaSU OnePlus Kernel Build Configuration   "
 echo "==============================================="
 echo "  按回车键可直接使用 [方括号] 中的默认值"
 echo ""
@@ -70,9 +70,9 @@ echo "✅ 必要构建依赖安装完成"
 
 echo "⚙️ 正在配置 ccache 缓存..."
 if [ "$SUSFS" == "On" ]; then
-  export CCACHE_DIR="$HOME/.ccache_${FEIL}_ReSukiSU_SUSFS"
+  export CCACHE_DIR="$HOME/.ccache_${FEIL}_BakaSU_SUSFS"
 else
-  export CCACHE_DIR="$HOME/.ccache_${FEIL}_ReSukiSU_NoSUSFS"
+  export CCACHE_DIR="$HOME/.ccache_${FEIL}_BakaSU_NoSUSFS"
 fi
 export CCACHE_COMPILERCHECK="%compiler% -dumpmachine; %compiler% -dumpversion"
 export CCACHE_NOHASHDIR="true"
@@ -145,15 +145,15 @@ if [ "$bbg" = "On" ] && [ "$KPM" = "Off" ]; then
   echo "✅ Baseband-Guard 配置完成"
 fi
 
-echo "⚡ 正在配置 ReSukiSU..."
+echo "⚡ 正在配置 BakaSU..."
 cd kernel_platform
-curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash -s main
+curl -LSs "https://raw.githubusercontent.com/Baka-SU/BakaSU/main/kernel/setup.sh" | bash -s main
 
 cd KernelSU
 KSU_VERSION_COUNT=$(git rev-list --count main)
 export KSUVER=$(expr $KSU_VERSION_COUNT + 30700)
 
-echo "✅ ReSukiSU 配置完成"
+echo "✅ BakaSU 配置完成"
 cd ../..
 
 echo "🔧 正在克隆所需补丁..."
@@ -368,7 +368,7 @@ echo "⚙️ 正在配置内核编译选项..."
 DEFCONFIG_PATH="$WORKSPACE/kernel_workspace/kernel_platform/common/arch/arm64/configs/gki_defconfig"
 
 echo "CONFIG_KSU=y" >> "$DEFCONFIG_PATH"
-echo "CONFIG_KSU_FULL_NAME_FORMAT=\"%TAG_NAME%-%COMMIT_SHA%-xiaoxiaow@ReSukiSU\"" >> "$DEFCONFIG_PATH"
+echo "CONFIG_KSU_FULL_NAME_FORMAT=\"%TAG_NAME%-%COMMIT_SHA%-xiaoxiaow@BakaSU\"" >> "$DEFCONFIG_PATH"
 echo "CONFIG_KSU_MULTI_MANAGER_SUPPORT=y" >> "$DEFCONFIG_PATH"
 
 if [ "$SUSFS" = "On" ]; then
@@ -521,13 +521,13 @@ echo "✅ 已找到 Kernel Image: $IMAGE_PATH"
 cp "$IMAGE_PATH" ./AnyKernel3/Image
 
 if [ "$lz4kd" = "On" ]; then
-  ARTIFACT_NAME="${FEIL}_ReSukiSU_lz4kd_${KSUVER}"
+  ARTIFACT_NAME="${FEIL}_BakaSU_lz4kd_${KSUVER}"
 elif [ "$KERNEL_VERSION" = "6.1" ]; then
-  ARTIFACT_NAME="${FEIL}_ReSukiSU_lz4_zstd_${KSUVER}"
+  ARTIFACT_NAME="${FEIL}_BakaSU_lz4_zstd_${KSUVER}"
 elif [ "$KERNEL_VERSION" = "6.6" ]; then
-  ARTIFACT_NAME="${FEIL}_ReSukiSU_lz4_${KSUVER}"
+  ARTIFACT_NAME="${FEIL}_BakaSU_lz4_${KSUVER}"
 else
-  ARTIFACT_NAME="${FEIL}_ReSukiSU_${KSUVER}"
+  ARTIFACT_NAME="${FEIL}_BakaSU_${KSUVER}"
 fi
 if [ "$SUSFS" = "On" ]; then
   ARTIFACT_NAME="${ARTIFACT_NAME}_SUSFS"
